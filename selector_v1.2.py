@@ -7,27 +7,28 @@ from time import sleep
 
 FILE_PATH = "C:/Users/frisa/Documents/Record Collection/Record-Collection-20240713.xlsx"
 
-def record_select(df, selection_list, past_recs_values):
+def record_select(df, selection_list, time_and_date, past_recs_values):
 	selection = df.loc[[rand.randrange(len(df))]]
 	slct_list = selection.values.tolist()[0]
 	slct_data = {
 		'Title': slct_list[0], 
 		'Artist': slct_list[1],
 		'Times Selected': 0,
-		}
+		'Date Last Recommended': time_and_date
+	}
 	
 	if past_recs_values is not None:
 		for i in range(0,len(past_recs_values)):
 			if slct_data['Title'] == past_recs_values[i]['Title']:
 				if slct_data['Artist'] == past_recs_values[i]['Artist']:
 					slct_data['Times Selected'] = int(past_recs_values[i]['Times Selected']) + 1
-					print(f'\nTitle: {slct_data['Title']}')
-					print(f'Artist: {slct_data['Artist']}')
-					dup_rec = input('Oops, I already gave this recommendation to you. Do you want to listen again? (y/n) ')
+					print(f"\nTitle: {slct_data['Title']}")
+					print(f"Artist: {slct_data['Artist']}")
+					dup_rec = input(f'This was recommended to you on {past_recs_values[i]['Date Last Recommended']}. Do you want to listen again? (y/n) ')
 
 					while dup_rec not in ['y', 'n']:
 						dup_rec = input('Invalid input... I previously gave this recommendation to you. Do you want to listen again? (y/n) ')
-						print(f'\nTitle: {slct_data['Title']}, Artist: {slct_data['Artist']}')
+						print(f"\nTitle: {slct_data['Title']}, Artist: {slct_data['Artist']}")
 
 					if dup_rec == 'y':
 						selection_list.append(slct_data)
@@ -60,6 +61,16 @@ def filter_selections(filter_rule, summary_df):
 	return rslt_df
 
 
+def present_selections(slct_list):
+	print('\n-------------------------------------')
+	print('YOUR MUSIC RECOMMENDATIONS FOR TODAY:')
+	print('-------------------------------------\n')
+	for i in range(0,len(slct_list)):
+		print('Title:', slct_list[i]['Title'])
+		print('Artist:',  slct_list[i]['Artist'], '\n')
+		sleep(1)
+
+
 def main():
 	if not os.path.exists('recommendations'):
 		current_dir = os.getcwd()
@@ -72,6 +83,7 @@ def main():
 	xls_file = pd.ExcelFile(FILE_PATH)
 
 	selection_list = []
+	time_and_date = datetime.today().strftime('%Y/%m/%d')
 
 	summary_df = pd.read_excel(xls_file, 'Summary')
 
@@ -95,7 +107,7 @@ def main():
 
 		while len(selection_list) < 2:
 			if len(rslt_df) > 2:
-				print(f'\nGot it! There are {len(rslt_df)} vinyls in the collection that match the applied filter!')
+				print(f"\nGot it! There are {len(rslt_df)} vinyls in the collection that match the applied filter!")
 				print('I will retrieve 2 records with that filter...\n')
 				sleep(5)
 				for i in range(0,2):
@@ -117,7 +129,7 @@ def main():
 				break
 				#input('Please enter a different year or continue.')
 
-		print(f'\nRetrieved {len(selection_list)} records for the requested filter')
+		print(f"\nRetrieved {len(selection_list)} records for the requested filter")
 		print('I will now pull some from the rest of the collection...')
 		sleep(2)
 	else:
@@ -133,18 +145,13 @@ def main():
 				past_recs_values.append({
 					'Title': row[0],
 					'Artist': row[1],
-					'Times Selected': row[2]
+					'Times Selected': row[2],
+					'Date Last Recommended': row[3]
 				})
 			while len(selection_list) < 4:
-				record_select(summary_df, selection_list, past_recs_values)
+				record_select(summary_df, selection_list, time_and_date, past_recs_values)
 
-			print('\n-------------------------------------')
-			print('YOUR MUSIC RECOMMENDATIONS FOR TODAY:')
-			print('-------------------------------------\n')
-			for i in range(0,len(selection_list)):
-				print('Title:', selection_list[i]['Title'])
-				print('Artist:',  selection_list[i]['Artist'], '\n')
-				sleep(1)
+			present_selections(selection_list)
 			
 			print('\nYour recommendations have been logged!')
 
@@ -156,17 +163,11 @@ def main():
 	else:
 		with open('vinyl_recommendations_records.csv', 'w', newline='') as new_recs:
 			filewriter = csv.writer(new_recs)
-			filewriter.writerow(['Title', 'Artist', 'Times Recommended'])
+			filewriter.writerow(['Title', 'Artist', 'Times Recommended', 'Date Last Recommended'])
 			while len(selection_list) < 4:
-				record_select(summary_df, selection_list, past_recs_values=None)
+				record_select(summary_df, selection_list, time_and_date, past_recs_values=None)
 
-			print('\n-------------------------------------')
-			print('YOUR MUSIC RECOMMENDATIONS FOR TODAY:')
-			print('-------------------------------------\n')
-			for i in range(0,len(selection_list)):
-				print('Title:', selection_list[i]['Title'])
-				print('Artist:',  selection_list[i]['Artist'], '\n')
-				sleep(1)
+			present_selections(selection_list)
 			
 			print('\nYour recommendations have been logged! Enjoy your listening!')
 
