@@ -5,7 +5,7 @@ import csv
 from datetime import datetime
 from time import sleep
 
-FILE_PATH = "C:/Users/frisa/Documents/Record Collection/Record-Collection-20240713.xlsx"
+FILE_PATH = "C:/Users/frisa/Documents/Record Collection/Record-Collection-20241226.xlsx"
 
 def record_select(df, selection_list, time_and_date, past_recs_values):
 	selection = df.loc[[rand.randrange(len(df))]]
