@@ -57,7 +57,7 @@ def main():
 	else:
 		os.chdir(f'{os.getcwd()}/recommendations')
 		  
-	file_path = "C:/Users/frisa/Documents/Record Collection/Record-Collection-20241226.xlsx"  # Replace with your actual file path
+	file_path = "C:/Users/frisa/Documents/Record Collection/Record-Collection-20250103.xlsx"  # Replace with your actual file path
 	output_csv = "updated_vinyl_recommendations.csv"
 
 	records_df = load_records(file_path)
