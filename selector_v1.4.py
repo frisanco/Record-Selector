@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 from datetime import datetime
+from time import sleep
 
 def select_random_vinyl(excel_file, log_file):
 	# Load vinyl records from the Excel workbook
@@ -36,7 +37,8 @@ def select_random_vinyl(excel_file, log_file):
 	selected_record['Date Recommended'] = today_date
 
 	# Print the selected record
-	print("\nWe recommend you listen to:")
+	print("\nWe recommend you listen to:\n")
+	sleep(5)
 	print(f"Title: {selected_record['Title']}\nArtist: {selected_record['Artist']}")
 
 	# Log the selected record
@@ -58,6 +60,6 @@ def select_random_vinyl(excel_file, log_file):
 	print(f"\nLogged recommendation to {log_file}")
 
 # Example usage
-excel_file = 'Record-Collection-20250103.xlsx'  # Replace with the path to your Excel file
+excel_file = 'Record-Collection-20250105.xlsx'  # Replace with the path to your Excel file
 log_file = 'recommended_vinyls.csv'  # Replace with the path to your log file
 select_random_vinyl(excel_file, log_file)
