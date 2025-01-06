@@ -60,6 +60,6 @@ def select_random_vinyl(excel_file, log_file):
 	print(f"\nLogged recommendation to {log_file}")
 
 # Example usage
-excel_file = 'Record-Collection-20250105.xlsx'  # Replace with the path to your Excel file
+excel_file = 'Record-Collection-20250103.xlsx'  # Replace with the path to your Excel file
 log_file = 'recommended_vinyls.csv'  # Replace with the path to your log file
 select_random_vinyl(excel_file, log_file)
