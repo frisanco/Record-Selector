@@ -1,7 +1,13 @@
 import pandas as pd
 import os
+import shutil
 from datetime import datetime
 from time import sleep
+
+def center_text(text):
+	"""Centers text in the terminal based on the current terminal width."""
+	terminal_width = shutil.get_terminal_size().columns
+	return text.center(terminal_width)
 
 def select_random_vinyl(excel_file, log_file):
 	# Load vinyl records from the Excel workbook
@@ -26,7 +32,7 @@ def select_random_vinyl(excel_file, log_file):
 
 	# Check if there are any records left to recommend
 	if vinyl_df.empty:
-		print("No more vinyl records left to recommend!")
+		print(center_text("No more vinyl records left to recommend!"))
 		return
 
 	# Randomly select a vinyl record
@@ -37,9 +43,16 @@ def select_random_vinyl(excel_file, log_file):
 	selected_record['Date Recommended'] = today_date
 
 	# Print the selected record
-	print("\nWe recommend you listen to:\n")
-	sleep(5)
-	print(f"Title: {selected_record['Title']}\nArtist: {selected_record['Artist']}")
+	# Centered output
+	print("\n" * 2)
+	print(center_text("*" * 50))
+	print(center_text("Welcome to RAV!"))
+	print(center_text("We think you should listen to:"))
+	print("\n")
+	print(center_text(f"Title: {selected_record['Title']}"))
+	print(center_text(f"Artist: {selected_record['Artist']}"))
+	print(center_text("*" * 50))
+	print("\n" * 2)
 
 	# Log the selected record
 	selected_log_df = pd.DataFrame([selected_record])
