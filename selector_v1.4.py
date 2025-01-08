@@ -49,6 +49,7 @@ def select_random_vinyl(excel_file, log_file):
 	print(center_text("Welcome to RAV!"))
 	print(center_text("We think you should listen to:"))
 	print("\n")
+	sleep(5)
 	print(center_text(f"Title: {selected_record['Title']}"))
 	print(center_text(f"Artist: {selected_record['Artist']}"))
 	print(center_text("*" * 50))
