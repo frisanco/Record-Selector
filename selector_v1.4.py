@@ -34,6 +34,25 @@ def select_random_vinyl(excel_file, log_file):
 	if vinyl_df.empty:
 		print(center_text("No more vinyl records left to recommend!"))
 		return
+	
+	# Apply desired filters
+	apply_filters = input("Would you like to apply a filter to your search? (y/n) ")
+	if apply_filters in ['y', 'n']:
+		filter_type = input("Enter your filter type: Y - year, A - artist, G - genre ")
+		if filter_type in ['Y', 'A', 'G']:
+			if filter_type == 'Y':
+				year = input("Enter the year you wish to filter on: ")
+				vinyl_df = vinyl_df[vinyl_df['Release'] == int(year)]
+			elif filter_type == 'A':
+				pass
+			else:
+				pass
+		else:
+			print("Invalid filter type. Continuing with no filter applied.")
+	else:
+		print("Filters are not applied. Moving on...")
+
+	print("Thanks for the feedback!\n")
 
 	# Randomly select a vinyl record
 	selected_record = vinyl_df.sample(1).iloc[0]
@@ -47,8 +66,10 @@ def select_random_vinyl(excel_file, log_file):
 	print("\n" * 2)
 	print(center_text("*" * 50))
 	print(center_text("Welcome to RAV!"))
+	print("\n")
 	print(center_text("We think you should listen to:"))
 	print("\n")
+
 	sleep(5)
 	print(center_text(f"Title: {selected_record['Title']}"))
 	print(center_text(f"Artist: {selected_record['Artist']}"))
@@ -74,6 +95,6 @@ def select_random_vinyl(excel_file, log_file):
 	print(f"\nLogged recommendation to {log_file}")
 
 # Example usage
-excel_file = 'Record-Collection-20250103.xlsx'  # Replace with the path to your Excel file
+excel_file = 'Record-Collection-20250314.xlsx'  # Replace with the path to your Excel file
 log_file = 'recommended_vinyls.csv'  # Replace with the path to your log file
 select_random_vinyl(excel_file, log_file)
