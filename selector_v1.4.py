@@ -35,22 +35,28 @@ def select_random_vinyl(excel_file, log_file):
 		print(center_text("No more vinyl records left to recommend!"))
 		return
 	
-	# Apply desired filters
+	# Choose if you want filters
 	apply_filters = input("Would you like to apply a filter to your search? (y/n) ")
-	if apply_filters in ['y', 'n']:
-		filter_type = input("Enter your filter type: Y - year, A - artist, G - genre ")
-		if filter_type in ['Y', 'A', 'G']:
-			if filter_type == 'Y':
-				year = input("Enter the year you wish to filter on: ")
-				vinyl_df = vinyl_df[vinyl_df['Release'] == int(year)]
-			elif filter_type == 'A':
-				pass
-			else:
-				pass
-		else:
-			print("Invalid filter type. Continuing with no filter applied.")
-	else:
-		print("Filters are not applied. Moving on...")
+	while apply_filters not in ['y', 'n']:
+		apply_filters = input("Yes or no, chief. You want filters or not? (y/n) ")
+	filter_type = input("Enter your filter type: Y - year, A - artist, G - genre ")
+	while filter_type not in ['Y', 'A', 'G']:
+		filter_type = input("Read the list again and choose. Y - year, A - artist, G - genre. ")
+
+	# Apply desired filters
+	if filter_type == 'Y':
+		year = input("Enter the year you wish to filter on: ")
+		vinyl_df = vinyl_df[vinyl_df['Release'] == int(year)]
+	elif filter_type == 'A':
+		artist = input("Enter the name of the artist you want to filter on: ")
+		artist_keywords = artist.split()
+		for word in artist_keywords:
+			if word.lower() in ['the', 'and', 'in', 'our']:
+				artist_keywords.remove(word)
+		search_pattern = '|'.join(artist_keywords)
+		vinyl_df = vinyl_df[vinyl_df['Artist'].str.contains(search_pattern, case=False, na=False)]
+	elif filter_type == 'G':
+		pass
 
 	print("Thanks for the feedback!\n")
 
